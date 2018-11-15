@@ -167,6 +167,7 @@ function bookSelectHandler(bookcode) {
   xhr.onreadystatechange = () => {
     if (xhr.readyState == 4 && xhr.status == 200) {
       let response = JSON.parse(xhr.responseText)
+      console.log(response)
       /*response is expected to be object like:
       {
       "id": 372,
@@ -179,22 +180,22 @@ function bookSelectHandler(bookcode) {
       //build and populate song details text input fields
       bookDetailsDiv.innerHTML += `<h3><hr>Book Details</h3>`
       bookDetailsDiv.innerHTML += `<div class="details_wrapper">`
-      bookDetailsDiv.innerHTML += `<div class="input_lable">ID: <input readonly class="details" type="text"  id="book_bookcode_field" value="${response.bookcode}"/></div>`
+      bookDetailsDiv.innerHTML += `<div class="input_lable">BOOKCODE: <input readonly class="details" type="text"  id="book_bookcode_field" value="${response.bookcode}"/></div>`
       bookDetailsDiv.innerHTML += `</div>`
       bookDetailsDiv.innerHTML += `<div class="details_wrapper">`
       bookDetailsDiv.innerHTML += `<div class="input_lable">TITLE: <input class="details" type="text" id="book_title_field" value="${response.title}"/></div>`
       bookDetailsDiv.innerHTML += `</div>`
       bookDetailsDiv.innerHTML += `<div class="details_wrapper">`
-      bookDetailsDiv.innerHTML += `<div class="input_lable">COMPOSER: <input class="details" type="text" id="book_format_field" value="${response.format}"/></div>`
+      bookDetailsDiv.innerHTML += `<div class="input_lable">FORMAT: <input class="details" type="text" id="book_format_field" value="${response.format}"/></div>`
       bookDetailsDiv.innerHTML += `</div>`
       bookDetailsDiv.innerHTML += `<div class="details_wrapper">`
-      bookDetailsDiv.innerHTML += `<div class="input_lable">BOOKCODE: <input class="details" type="text" id="book_filename_field" value="${response.filename}"/></div>`
+      bookDetailsDiv.innerHTML += `<div class="input_lable">FILENAME: <input class="details" type="text" id="book_filename_field" value="${response.filename}"/></div>`
       bookDetailsDiv.innerHTML += `</div>`
       bookDetailsDiv.innerHTML += `<div class="details_wrapper">`
-      bookDetailsDiv.innerHTML += `<div class="input_lable">PAGE: <input class="details" type="text" id="book_page_offset_field" value="${response.page_offset}"/></div>`
+      bookDetailsDiv.innerHTML += `<div class="input_lable">PAGE OFFSET: <input class="details" type="text" id="book_page_offset_field" value="${response.page_offset}"/></div>`
       bookDetailsDiv.innerHTML += `</div>`
       bookDetailsDiv.innerHTML += `<div class="details_wrapper">`
-      bookDetailsDiv.innerHTML += `<div class="input_lable">LENGTH: <input class="details" type="text" id="book_num_pages_field" value="${response.num_pages}"/></div>`
+      bookDetailsDiv.innerHTML += `<div class="input_lable">NUM PAGES: <input class="details" type="text" id="book_num_pages_field" value="${response.num_pages}"/></div>`
       bookDetailsDiv.innerHTML += `</div>`
       bookDetailsDiv.innerHTML += `<div></div>`
       bookDetailsDiv.innerHTML += `<button id="book_update" onclick="bookUpdateHandler()" >Update</button>`
@@ -226,9 +227,9 @@ function bookSearchHandler() {
     if (xhr.readyState == 4 && xhr.status == 200) {
       let response = JSON.parse(xhr.responseText)
       //response is expected to object like: {songs: [ {id: title:},{id: title:},...]}
-      bookDiv.innerHTML = bookDiv.innerHTML + `<h3><hr>Songs matching: ${key} </h3><ul>`
+      bookDiv.innerHTML = bookDiv.innerHTML + `<h3><hr>Books matching: ${key} </h3><ul>`
       for (let book of response.books) {
-        bookDiv.innerHTML = bookDiv.innerHTML + `<li onclick="bookSelectHandler(${book.bookcode})">
+        bookDiv.innerHTML = bookDiv.innerHTML + `<li onclick="bookSelectHandler('${book.bookcode}')">
 <font color="blue">${book.bookcode}:  ${book.title}</font></li>`
       }
       bookDiv.innerHTML = bookDiv.innerHTML + `</ul>`

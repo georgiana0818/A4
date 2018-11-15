@@ -303,7 +303,7 @@ exports.api_bookDetails = function(request, response) {
       result.bookcode = rows[i].bookcode
       result.title = rows[i].title
       result.format = rows[i].format
-      result.filename = rows[i].bookcode
+      result.filename = rows[i].filename
       result.page_offset = rows[i].page_offset
       result.num_pages = rows[i].num_pages
     }
