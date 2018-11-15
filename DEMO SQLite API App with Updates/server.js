@@ -98,6 +98,10 @@ app.get('/api/users', routes.api_users) //get users
 app.get('/api/songs', routes.api_songs) //get songs
 app.get('/api/song/*', routes.api_songDetails) //get song details
 app.post('/api/song/*', routes.api_update_song) //update data for a song
+app.get('/api/books', routes.api_books) //get songs
+app.get('/api/book/*', routes.api_bookDetails) //get song details
+app.post('/api/book/*', routes.api_update_book) //update data for a song
+
 
 //start server
 app.listen(PORT, function(err){

@@ -131,17 +131,19 @@ exports.api_songs = function(request, response) {
 
   //SELECT id, title FROM songs WHERE title LIKE '%Girl%'
 
-  let sql = "SELECT id, title FROM songs WHERE title LIKE ? LIMIT 30"
-  let title = '%' //sql match anything character
-  if (urlObj.query['title']) {
-    title = `%${urlObj.query['title']}%`
-    console.log("finding title: " + urlObj.query['title'])
+  let sql = "SELECT id, title FROM songs WHERE title LIKE ? OR composer LIKE ? LIMIT 30;"
+  let keyword = '%' //sql match anything character
+  if (urlObj.query['key']) {
+    keyword = `%${urlObj.query['key']}%`
+    console.log("finding keyword: " + urlObj.query['key'])
   }
+
+  sql = "SELECT id, title FROM songs WHERE title LIKE '" +  keyword + "' OR composer LIKE '" + keyword + "' LIMIT 30;"
 
   let result = {
     songs: []
   } //data object to send to client
-  db.all(sql, title, function(err, rows) {
+  db.all(sql, function(err, rows) {
     for (let i = 0; i < rows.length; i++) {
       let song = {}
       song.id = rows[i].id
@@ -227,6 +229,127 @@ database songs table schema is expected to as follows:
     songData.page,
     songData.length,
     songData.studentnum,
+    function(err){
+       console.log(`ERR?: ${err}`)
+       let result = {status: "SUCCESS"} //data object to send to client
+       if(err) result.status = "ERROR"
+       //write header with HTTP success code and MIME type
+       response.writeHead(200, {
+         'Content-Type': 'application/json'
+       })
+       //write JSON data and send response to client
+       response.end(JSON.stringify(result))
+    })
+}
+
+exports.api_books = function(request, response) {
+  // /api/bookcodes?keyword=Girl
+  //responds to client with JSON data
+  console.log("RUNNING FIND BOOKS JSON API")
+
+  var urlObj = parseURL(request, response)
+  //use prepared sql statements (the ones with ? parameters)
+
+  //SELECT id, title FROM songs WHERE title LIKE '%Girl%'
+
+  let sql = "SELECT bookcode, title FROM bookcodes WHERE bookcode LIKE ?;"
+  let keyword = '%' //sql match anything character
+  if (urlObj.query['key']) {
+    keyword = `%${urlObj.query['key']}%`
+    console.log("finding keyword: " + urlObj.query['key'])
+  }
+
+  sql = "SELECT bookcode, title FROM bookcodes WHERE bookcode LIKE '" +  keyword + "' OR title LIKE '" + keyword + "' "
+
+  let result = {
+    books: []
+  } //data object to send to client
+  db.all(sql, function(err, rows) {
+    console.log("Hi,there!")
+    console.log(rows)
+    for (let i = 0; i < rows.length; i++) {
+      let book = {}
+      book.bookcode = rows[i].bookcode
+      book.title = rows[i].title
+      result.books.push(book)
+    }
+    //write header with HTTP success code and MIME type
+    response.writeHead(200, {
+      'Content-Type': 'application/json'
+    })
+    //write JSON data and send response to client
+    response.end(JSON.stringify(result))
+  })
+}
+
+exports.api_bookDetails = function(request, response) {
+
+  // /api/song/235
+
+  let urlObj = parseURL(request, response)
+  let bookID = urlObj.path //expected form: /song/235
+  bookID = bookID.substring(bookID.lastIndexOf("/") + 1, bookID.length)
+
+  //use of a prepared sql statement (the ones with ? parameters)
+  let sql = "SELECT bookcode, title, format, filename, page_offset, num_pages FROM bookcodes WHERE bookcode=?"
+  console.log("API: GET book DETAILS: " + bookID)
+
+  let result = {} //data object to send to client
+  db.all(sql, bookID, function(err, rows) {
+    console.log('Book Data')
+    console.log(rows)
+    //note: only one result row is expected
+    for (let i = 0; i < rows.length; i++) {
+      result.bookcode = rows[i].bookcode
+      result.title = rows[i].title
+      result.format = rows[i].format
+      result.filename = rows[i].bookcode
+      result.page_offset = rows[i].page_offset
+      result.num_pages = rows[i].num_pages
+    }
+    //write header with HTTP success code and MIME type
+    response.writeHead(200, {
+      'Content-Type': 'application/json'
+    })
+    //write JSON data and send response to client
+    response.end(JSON.stringify(result))
+  })
+}
+
+exports.api_update_book = function(request, response) {
+
+  //api/update/235
+
+  let urlObj = parseURL(request, response)
+  let bookID = urlObj.path //expected form: /song/235
+  bookID = bookID.substring(bookID.lastIndexOf("/") + 1, bookID.length)
+
+  let bookData = request.body //body of HTTP POST message
+
+  console.log("API: UPDATE BOOK: " + bookID)
+  console.log(`Book Data:`)
+  console.log(bookData)
+  
+/*database songs table schema is expected to as follows:
+  CREATE TABLE songs(
+  id integer primary key not null, --auto increment key
+  title text NOT NULL, --title of the song
+  composer text NOT NULL, --composer of the song
+  key text NOT NULL, --key of the song
+  bars text NOT NULL --bars of the song in standard music notation
+  );*/
+ 
+  //use of a prepared sql statement (the ones with ? parameters)
+ let sql = `INSERT OR REPLACE INTO bookcodes (bookcode, title, format, filename, page_offset, num_pages) VALUES (?,?,?,?,?,?)`
+
+  console.log(sql)
+  db.run(sql,
+    bookData.bookcode,
+    bookData.title,
+    bookData.format,
+    bookData.filename,
+    bookData.page_offset,
+    bookData.num_pages,
     function(err){
        console.log(`ERR?: ${err}`)
        let result = {status: "SUCCESS"} //data object to send to client
