@@ -3,8 +3,10 @@ function songUpdateHandler() {
   let song_id = document.getElementById('song_id_field').value
   let song_title = document.getElementById('song_title_field').value
   let song_composer = document.getElementById('song_composer_field').value
-  let song_key = document.getElementById('song_key_field').value
-  let song_bars = document.getElementById('song_bars_field').value
+  let song_bookcode = document.getElementById('song_bookcode_field').value
+  let song_page = document.getElementById('song_page_field').value
+  let song_length = document.getElementById('song_length_field').value
+  let song_studentnum = document.getElementById('song_studentnum_field').value
 
   console.log(`Updating song_id: ${song_id}`)
   let url = `/api/song/${song_id}`
@@ -12,8 +14,10 @@ function songUpdateHandler() {
     id: song_id,
     title: song_title,
     composer: song_composer,
-    key: song_key,
-    bars: song_bars
+    bookcode: song_bookcode,
+    page: song_page,
+    length: song_length,
+    studentnum: song_studentnum
   }
 
   let xhr = new XMLHttpRequest()
@@ -63,12 +67,17 @@ function songSelectHandler(song_id) {
       songDetailsDiv.innerHTML += `<div class="input_lable">COMPOSER: <input class="details" type="text" id="song_composer_field" value="${response.composer}"/></div>`
       songDetailsDiv.innerHTML += `</div>`
       songDetailsDiv.innerHTML += `<div class="details_wrapper">`
-      songDetailsDiv.innerHTML += `<div class="input_lable">KEY: <input class="details" type="text" id="song_key_field" value="${response.key}"/></div>`
+      songDetailsDiv.innerHTML += `<div class="input_lable">BOOKCODE: <input class="details" type="text" id="song_bookcode_field" value="${response.bookcode}"/></div>`
       songDetailsDiv.innerHTML += `</div>`
       songDetailsDiv.innerHTML += `<div class="details_wrapper">`
-      songDetailsDiv.innerHTML += `<div>BARS: </div>`
+      songDetailsDiv.innerHTML += `<div class="input_lable">PAGE: <input class="details" type="text" id="song_page_field" value="${response.page}"/></div>`
       songDetailsDiv.innerHTML += `</div>`
-      songDetailsDiv.innerHTML += `<div><textarea rows="6" cols="100" id="song_bars_field">${response.bars}</textarea></div>`
+      songDetailsDiv.innerHTML += `<div class="details_wrapper">`
+      songDetailsDiv.innerHTML += `<div class="input_lable">LENGTH: <input class="details" type="text" id="song_length_field" value="${response.length}"/></div>`
+      songDetailsDiv.innerHTML += `</div>`
+      songDetailsDiv.innerHTML += `<div class="details_wrapper">`
+      songDetailsDiv.innerHTML += `<div class="input_lable">STUDENT NUM: <input class="details" type="text" id="song_studentnum_field" value="${response.studentnum}"/></div>`
+      songDetailsDiv.innerHTML += `</div>`
       songDetailsDiv.innerHTML += `<div></div>`
       songDetailsDiv.innerHTML += `<button id="song_update" onclick="songUpdateHandler()" >Update</button>`
     }

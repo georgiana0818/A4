@@ -2,7 +2,7 @@ const url = require('url')
 const sqlite3 = require('sqlite3').verbose() //verbose provides more detailed stack trace
 
 //connect to sqlite database
-let db = new sqlite3.Database('data/db_1200iRealSongs.db')
+let db = new sqlite3.Database('data/fakebooks3005fall2018.db')
 
 db.serialize(function() {
   //make sure a couple of users exist in the database for testing.
@@ -166,7 +166,7 @@ exports.api_songDetails = function(request, response) {
   songID = songID.substring(songID.lastIndexOf("/") + 1, songID.length)
 
   //use of a prepared sql statement (the ones with ? parameters)
-  let sql = "SELECT id, title, composer, key, bars FROM songs WHERE id=?"
+  let sql = "SELECT id, title, composer, bookcode, page, length, studentnum FROM songs WHERE id=?"
   console.log("API: GET SONG DETAILS: " + songID)
 
   let result = {} //data object to send to client
@@ -178,8 +178,10 @@ exports.api_songDetails = function(request, response) {
       result.id = rows[i].id
       result.title = rows[i].title
       result.composer = rows[i].composer
-      result.key = rows[i].key
-      result.bars = rows[i].bars
+      result.bookcode = rows[i].bookcode
+      result.page = rows[i].page
+      result.length = rows[i].length
+      result.studentnum = rows[i].studentnum
     }
     //write header with HTTP success code and MIME type
     response.writeHead(200, {
@@ -214,15 +216,17 @@ database songs table schema is expected to as follows:
   );
   */
   //use of a prepared sql statement (the ones with ? parameters)
-  let sql = `INSERT OR REPLACE INTO songs (id,title,composer,key,bars) VALUES (?,?,?,?,?)`
+  let sql = `INSERT OR REPLACE INTO songs (id,title,composer,bookcode,page,length,studentnum) VALUES (?,?,?,?,?,?,?)`
 
   console.log(sql)
   db.run(sql,
     songData.id,
     songData.title,
     songData.composer,
-    songData.key,
-    songData.bars,
+    songData.bookcode,
+    songData.page,
+    songData.length,
+    songData.studentnum,
     function(err){
        console.log(`ERR?: ${err}`)
        let result = {status: "SUCCESS"} //data object to send to client
