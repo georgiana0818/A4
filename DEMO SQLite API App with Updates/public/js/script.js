@@ -101,6 +101,11 @@ function titleSearchHandler() {
   //clear song details div
   let songDetailsDiv = document.getElementById('song_details')
   songDetailsDiv.innerHTML = ''
+  let bookDiv = document.getElementById('book_data')
+  bookDiv.innerHTML = ''
+  //clear song details div
+  let bookDetailsDiv = document.getElementById('book_details')
+  bookDetailsDiv.innerHTML = ''
 
 
   let xhr = new XMLHttpRequest()
@@ -128,7 +133,7 @@ function bookUpdateHandler() {
   let book_filename = document.getElementById('book_filename_field').value
   let book_page_offset = document.getElementById('book_page_offset_field').value
   let book_num_pages = document.getElementById('book_num_pages_field').value
- 
+
 
   console.log(`Updating book_bookcode: ${book_bookcode}`)
   let url = `/api/book/${book_bookcode}`
@@ -159,7 +164,7 @@ function bookUpdateHandler() {
 
 function bookSelectHandler(bookcode) {
   // =================================
-  let bookDetailsDiv = document.getElementById('song_details')
+  let bookDetailsDiv = document.getElementById('book_details')
   bookDetailsDiv.innerHTML = ''
   let url = `/api/book/${bookcode}`
 
@@ -168,16 +173,7 @@ function bookSelectHandler(bookcode) {
     if (xhr.readyState == 4 && xhr.status == 200) {
       let response = JSON.parse(xhr.responseText)
       console.log(response)
-      /*response is expected to be object like:
-      {
-      "id": 372,
-      "title": "Girl From Ipanema, The",
-      "composer": "Jobim Antonio-Carlos",
-      "key": "F",
-      "bars": "[4/4][A]|:  F^7  |  %  |  G7#11  |  %  |  G-7  |]"
-      }
-      */
-      //build and populate song details text input fields
+
       bookDetailsDiv.innerHTML += `<h3><hr>Book Details</h3>`
       bookDetailsDiv.innerHTML += `<div class="details_wrapper">`
       bookDetailsDiv.innerHTML += `<div class="input_lable">BOOKCODE: <input readonly class="details" type="text"  id="book_bookcode_field" value="${response.bookcode}"/></div>`
@@ -215,10 +211,15 @@ function bookSearchHandler() {
     url = `/api/books`
   }
 
-  let bookDiv = document.getElementById('song_data')
+  let songDiv = document.getElementById('song_data')
+  songDiv.innerHTML = ''
+  //clear song details div
+  let songDetailsDiv = document.getElementById('song_details')
+  songDetailsDiv.innerHTML = ''
+  let bookDiv = document.getElementById('book_data')
   bookDiv.innerHTML = ''
   //clear song details div
-  let bookDetailsDiv = document.getElementById('song_details')
+  let bookDetailsDiv = document.getElementById('book_details')
   bookDetailsDiv.innerHTML = ''
 
 
